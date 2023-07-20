@@ -8,6 +8,7 @@ import { pauseHandler, playHandler, syncToThisHandler, onEndedHandler } from './
 import { onFastForwardHandler, onFastBackwardHandler } from './utils/controls'
 import { HideList } from './types'
 import { extractVideoId } from './utils'
+import { notification } from 'antd'
 
 
 function App() {
@@ -15,8 +16,8 @@ function App() {
   const [vods, setVods] = useState<string[]>([])
   const players = useRef<ReactPlayer[]>([])
   const [hideList, setHideList] = useState<HideList>({})
-  
   const [addVodModalOpen, setAddVodModalOpen] = useState<boolean>(false)
+  const [apiNotification, contextHolder] = notification.useNotification()
 
   useEffect(() => {
     const hash = window.location.hash
@@ -33,6 +34,7 @@ function App() {
 
   return (
     <div className="App">
+      {contextHolder}
       <AddVodModal
         open={addVodModalOpen}
         handleClose={() => {
@@ -79,20 +81,23 @@ function App() {
               ref={player => players.current[i] = player!}
               onPause={() => {
                 console.log('pause')
-                pauseHandler(players)
+                pauseHandler(players, i)
               }}
               onPlay={() => {
                 playHandler(players)
               }}
               muted={true}
               onEnded={() => {
-                onEndedHandler(i, v, hideList, setHideList, players)
+                onEndedHandler(i, v, hideList, setHideList, players, apiNotification)
+              }}
+              onSeek={() => {
+                playHandler(players)
               }}
               config={{
                 twitch: {
                   options: {
                     muted: true,
-                    autoplay: true,
+                    autoplay: false
                   }
                 }
               }}
