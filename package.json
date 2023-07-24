@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --port $PORT",
-    "start": "exit 0"
+    "start": "npm run preview"
   },
   "dependencies": {
     "antd": "^5.7.0",
