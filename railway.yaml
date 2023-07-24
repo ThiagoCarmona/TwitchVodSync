@@ -1,0 +1,14 @@
+name: twitch-vods-web
+environments:
+  - production
+services:
+  - name: twitch-vods-web
+    type: nodejs
+    version: 18
+    build:
+      commands:
+        - npm i
+        - npm run build
+    run:
+      commands:
+        - npm run preview
