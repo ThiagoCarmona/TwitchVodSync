@@ -6,7 +6,7 @@ import {PlusCircleOutlined, FastForwardOutlined, FastBackwardOutlined, ArrowUpOu
 import { AddVodModal } from './components/AddVodModal'
 import { pauseHandler, playHandler, syncToThisHandler, onEndedHandler } from './utils/player'
 import { onFastForwardHandler, onFastBackwardHandler } from './utils/controls'
-import { HideList } from './types'
+import { HideList, VolumeStatus } from './types'
 import { extractVideoId } from './utils'
 import { notification } from 'antd'
 
@@ -18,6 +18,7 @@ function App() {
   const [hideList, setHideList] = useState<HideList>({})
   const [addVodModalOpen, setAddVodModalOpen] = useState<boolean>(false)
   const [apiNotification, contextHolder] = notification.useNotification()
+  const [vodStatus, setVodStatus] = useState<VolumeStatus[]>([])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -30,6 +31,28 @@ function App() {
       setVods(uniqueVods)
     }
   }, [])
+
+  useEffect(() => {
+    setInterval(() => {
+      const newVodStatus = [...vodStatus]
+      players.current.forEach((player, i) => {
+        if (player) {
+          const volume = player.getInternalPlayer().getVolume()
+          if(!newVodStatus[i]) return
+          if(volume !== newVodStatus[i].volume){
+            newVodStatus[i].volume = volume
+            setVodStatus(newVodStatus)
+            //mute all other players
+            players.current.forEach((p, j) => {
+              if(i !== j){
+                p.getInternalPlayer().setVolume(0)
+              }
+            })
+          }
+        }
+      })
+    }, 100)
+  }, [vodStatus])
 
 
   return (
@@ -92,6 +115,14 @@ function App() {
               }}
               onSeek={() => {
                 playHandler(players)
+              }}
+              onReady={() => {
+                const newVodStatus = [...vodStatus]
+                newVodStatus.push({
+                  index: i,
+                  volume: players.current[i].getInternalPlayer().getVolume()
+                })
+                setVodStatus(newVodStatus)
               }}
               config={{
                 twitch: {
