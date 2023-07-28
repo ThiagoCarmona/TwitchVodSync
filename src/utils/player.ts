@@ -48,7 +48,8 @@ export const syncToThisHandler = async (index: number, players: MutableRefObject
 
 export const onEndedHandler = (
   i: number,
-  v: string, hideList: HideList,
+  v: string,
+  hideList: HideList,
   setHideList: Dispatch<SetStateAction<HideList>>,
   players: MutableRefObject<ReactPlayer[]>,
   apiNotification?: NotificationInstance
@@ -60,4 +61,11 @@ export const onEndedHandler = (
   const player = players.current[i]
   player.getInternalPlayer().setMuted(true)
   player.getInternalPlayer().setVideo('')
+  
+  const newHash = window.location.hash
+  .replace(v, '')
+  .replace('//', '/')
+
+  window.location.hash = newHash
+
 }
