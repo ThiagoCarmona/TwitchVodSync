@@ -36,6 +36,7 @@ function App() {
     setInterval(() => {
       const newVodStatus = [...vodStatus]
       players.current.forEach((player, i) => {
+        if (hideList[i]) return
         if (player) {
           const volume = player.getInternalPlayer().getVolume()
           if(!newVodStatus[i]) return
