@@ -22,9 +22,12 @@ export const pauseHandler = (
   if (currentTime >= duration - 5) {
     return
   }
-  if(player.getInternalPlayer().getQuality !== VodStatus[index].quality) {
+
+  const realQuality = player.getInternalPlayer().getQuality()
+  const storedQuality = VodStatus[index].quality
+  if(realQuality !== storedQuality) {
     const newVodStatus = [...VodStatus]
-    newVodStatus[index].quality = player.getInternalPlayer().getQuality()
+    newVodStatus[index].quality = realQuality
     setVodStatus(newVodStatus)
     return
   }
