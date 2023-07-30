@@ -6,7 +6,7 @@ import {PlusCircleOutlined, FastForwardOutlined, FastBackwardOutlined, ArrowUpOu
 import { AddVodModal } from './components/AddVodModal'
 import { pauseHandler, playHandler, syncToThisHandler, onEndedHandler } from './utils/player'
 import { onFastForwardHandler, onFastBackwardHandler } from './utils/controls'
-import { HideList, VolumeStatus } from './types'
+import { HideList, VodStatus } from './types'
 import { extractVideoId } from './utils'
 import { notification } from 'antd'
 
@@ -18,7 +18,7 @@ function App() {
   const [hideList, setHideList] = useState<HideList>({})
   const [addVodModalOpen, setAddVodModalOpen] = useState<boolean>(false)
   const [apiNotification, contextHolder] = notification.useNotification()
-  const [vodStatus, setVodStatus] = useState<VolumeStatus[]>([])
+  const [vodStatus, setVodStatus] = useState<VodStatus[]>([])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -97,14 +97,13 @@ function App() {
             <ReactPlayer
               key={i}
               url={`https://www.twitch.tv/videos/${v}`}
-              playing={true}
+              playing={false}
               controls={true}
               width='100%'
               height='100%'
               ref={player => players.current[i] = player!}
               onPause={() => {
-                console.log('pause')
-                pauseHandler(players, i)
+                pauseHandler(vodStatus, setVodStatus, players, i)
               }}
               onPlay={() => {
                 playHandler(players)
@@ -120,14 +119,19 @@ function App() {
                 const newVodStatus = [...vodStatus]
                 newVodStatus.push({
                   index: i,
-                  volume: players.current[i].getInternalPlayer().getVolume()
+                  volume: players.current[i].getInternalPlayer().getVolume(),
+                  quality: players.current[i].getInternalPlayer().getQuality()
                 })
                 setVodStatus(newVodStatus)
+                players.current[i].getInternalPlayer().pause()
+              }}
+              //check quality change
+              onPlaybackRateChange={() => {
+                console.log('playback rate change')
               }}
               config={{
                 twitch: {
                   options: {
-                    muted: true,
                     autoplay: false
                   }
                 }

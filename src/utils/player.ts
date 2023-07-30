@@ -5,15 +5,27 @@ import moment from "moment"
 import { HideList } from "../types"
 import { sendEndNotification } from "./notification"
 import { NotificationInstance } from "antd/lib/notification/interface";
+import { VodStatus } from "../types"
 
 
-export const pauseHandler = (players: MutableRefObject<ReactPlayer[]>, index: number) => {
+export const pauseHandler = (
+  VodStatus: VodStatus[],
+  setVodStatus: Dispatch<SetStateAction<VodStatus[]>>,
+  players: MutableRefObject<ReactPlayer[]>,
+  index: number
+  ) => {
   //check if player is pause by end of video
   const player = players.current[index]
   const currentTime = player.getCurrentTime()
   const duration = player.getDuration()
   console.log(player)
   if (currentTime >= duration - 5) {
+    return
+  }
+  if(player.getInternalPlayer().getQuality !== VodStatus[index].quality) {
+    const newVodStatus = [...VodStatus]
+    newVodStatus[index].quality = player.getInternalPlayer().getQuality()
+    setVodStatus(newVodStatus)
     return
   }
   players.current.forEach(player => {
