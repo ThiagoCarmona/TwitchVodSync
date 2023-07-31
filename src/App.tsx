@@ -34,6 +34,7 @@ function App() {
 
   useEffect(() => {
     setInterval(() => {
+      if(vodStatus.length !== vods.length) return
       const newVodStatus = [...vodStatus]
       players.current.forEach((player, i) => {
         if (hideList[i]) return
