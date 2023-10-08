@@ -102,7 +102,7 @@ function App() {
               playing={false}
               controls={true}
               width='100%'
-              height='100%'
+              height='100%'            
               ref={player => players.current[i] = player!}
               onPause={() => {
                 pauseHandler(vodStatus, setVodStatus, players, i)
@@ -126,6 +126,15 @@ function App() {
                 })
                 setVodStatus(newVodStatus)
                 players.current[i].getInternalPlayer().pause()
+                setTimeout(() => {
+                  if(i === 0) return;
+                  try{
+                    players.current[i].getInternalPlayer().setQuality('480p')
+                  }catch(e){
+                    console.log(e)
+                  }
+                }, 10000);
+
               }}
               //check quality change
               onPlaybackRateChange={() => {
