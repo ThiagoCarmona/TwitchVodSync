@@ -9,7 +9,7 @@ import { onFastForwardHandler, onFastBackwardHandler } from './utils/controls'
 import { HideList, VodStatus } from './types'
 import { extractVideoId } from './utils'
 import { notification } from 'antd'
-import { useDebounce } from 'usehooks-ts'
+import { useDebounce, useTimeout } from 'usehooks-ts'
 
 function App() {
 
@@ -181,7 +181,13 @@ function App() {
       open={isFloatingButtonOpen}
       onOpenChange={(open) => {
         setIsFloatingButtonOpen(open)
+        if(open) {
+          setTimeout(() => {
+            setIsFloatingButtonOpen(false)
+          }, 30000)
+        }
       }}
+      
     > 
       <Tooltip title={`Forward ${forwardSeconds === 0 ? 30 : forwardSeconds} seconds`} placement='left'>
         <FloatButton icon={<FastForwardOutlined/>} onClick={() =>{
