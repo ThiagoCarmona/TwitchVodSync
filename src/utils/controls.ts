@@ -1,17 +1,18 @@
 import ReactPlayer from "react-player"
 import {MutableRefObject} from "react"
 
-export const onFastForwardHandler = (players: MutableRefObject<ReactPlayer[]>) => {
+export const onFastForwardHandler = (players: MutableRefObject<ReactPlayer[]>, seconds: number) => {
   players.current.forEach(player => {
     const currentTime = player.getCurrentTime()
-    console.log(currentTime)
-    player.getInternalPlayer().seek(currentTime + 30)
+    player.getInternalPlayer().seek(currentTime + seconds)
+    player.getInternalPlayer().play()
   })
 }
 
-export const onFastBackwardHandler = (players: MutableRefObject<ReactPlayer[]>) => {
+export const onFastBackwardHandler = (players: MutableRefObject<ReactPlayer[]>, seconds: number) => {
   players.current.forEach(player => {
     const currentTime = player.getCurrentTime()
-    player.seekTo(currentTime - 30)
+    player.seekTo(currentTime - seconds)
+    player.getInternalPlayer().play()
   })
 }

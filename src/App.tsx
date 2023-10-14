@@ -9,7 +9,7 @@ import { onFastForwardHandler, onFastBackwardHandler } from './utils/controls'
 import { HideList, VodStatus } from './types'
 import { extractVideoId } from './utils'
 import { notification } from 'antd'
-
+import { useDebounce } from 'usehooks-ts'
 
 function App() {
 
@@ -19,6 +19,24 @@ function App() {
   const [addVodModalOpen, setAddVodModalOpen] = useState<boolean>(false)
   const [apiNotification, contextHolder] = notification.useNotification()
   const [vodStatus, setVodStatus] = useState<VodStatus[]>([])
+
+  const [forwardSeconds, setForwardSeconds] = useState<number>(0)
+  const [backwardSeconds, setBackwardSeconds] = useState<number>(0)
+
+  const debounceForwardSeconds = useDebounce(forwardSeconds, 1000)
+  const debounceBackwardSeconds = useDebounce(backwardSeconds, 1000)
+
+  useEffect(() => {
+    if(debounceForwardSeconds === 0) return
+    onFastForwardHandler(players, debounceForwardSeconds)
+    setForwardSeconds(0)
+  }, [debounceForwardSeconds])
+
+  useEffect(() => {
+    if(debounceBackwardSeconds === 0) return
+    onFastBackwardHandler(players, debounceBackwardSeconds)
+    setBackwardSeconds(0)
+  }, [debounceBackwardSeconds])
 
   useEffect(() => {
     const hash = window.location.hash
@@ -159,14 +177,15 @@ function App() {
       icon={<ArrowUpOutlined />}
       closeIcon={<ArrowDownOutlined />}
     > 
-      <Tooltip title="Forward 30 seconds" placement='left'>
+      <Tooltip title={`Forward ${forwardSeconds === 0 ? 30 : forwardSeconds} seconds`} placement='left'>
         <FloatButton icon={<FastForwardOutlined/>} onClick={() =>{
-          onFastForwardHandler(players)
-        }}/>
+          setForwardSeconds(forwardSeconds + 30)
+        }}
+        />
       </Tooltip>
-      <Tooltip title="Back 30 seconds" placement='left'>
+      <Tooltip title={`Backward ${backwardSeconds === 0 ? 30 : backwardSeconds} seconds`} placement='left'>
         <FloatButton icon={<FastBackwardOutlined/>} onClick={() =>{
-          onFastBackwardHandler(players)
+          setBackwardSeconds(backwardSeconds + 30)
         }}/>
       </Tooltip>
       <Tooltip title="Add VOD" placement='left'>
