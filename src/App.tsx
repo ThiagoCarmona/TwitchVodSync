@@ -9,7 +9,7 @@ import { onFastForwardHandler, onFastBackwardHandler } from './utils/controls'
 import { HideList, VodStatus } from './types'
 import { extractVideoId } from './utils'
 import { notification } from 'antd'
-import { useDebounce, useTimeout } from 'usehooks-ts'
+import { useDebounce } from 'usehooks-ts'
 
 function App() {
 
