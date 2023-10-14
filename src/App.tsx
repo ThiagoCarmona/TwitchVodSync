@@ -26,6 +26,8 @@ function App() {
   const debounceForwardSeconds = useDebounce(forwardSeconds, 1000)
   const debounceBackwardSeconds = useDebounce(backwardSeconds, 1000)
 
+  const [isFloatingButtonOpen, setIsFloatingButtonOpen] = useState<boolean>(false)
+
   useEffect(() => {
     if(debounceForwardSeconds === 0) return
     onFastForwardHandler(players, debounceForwardSeconds)
@@ -176,6 +178,10 @@ function App() {
       style={{ right: 24, zIndex: 9999 }}
       icon={<ArrowUpOutlined />}
       closeIcon={<ArrowDownOutlined />}
+      open={isFloatingButtonOpen}
+      onOpenChange={(open) => {
+        setIsFloatingButtonOpen(open)
+      }}
     > 
       <Tooltip title={`Forward ${forwardSeconds === 0 ? 30 : forwardSeconds} seconds`} placement='left'>
         <FloatButton icon={<FastForwardOutlined/>} onClick={() =>{
@@ -191,6 +197,7 @@ function App() {
       <Tooltip title="Add VOD" placement='left'>
         <FloatButton icon={<PlusCircleOutlined/>} onClick={() => {
           setAddVodModalOpen(true)
+          isFloatingButtonOpen && setIsFloatingButtonOpen(false)
         }}/>
       </Tooltip>
     </FloatButton.Group>
