@@ -37,6 +37,13 @@
   }
 }
 
+.grid-item-2:hover {
+  .controls {
+    display: block;
+  }
+}
+
+
 .controls {
   position: absolute;
   z-index: 999;
