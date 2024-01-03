@@ -4,15 +4,28 @@
 
 .players-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(512px, 1fr));
   grid-gap: 10px;
   padding: 5px;
+}
+
+.players-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .grid-item {
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  height: 265px;
+  height: 512px;
+  display: relative;
+  z-index: 998;
+}
+
+.grid-item-2 {
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: 450px;
   display: relative;
   z-index: 998;
 }

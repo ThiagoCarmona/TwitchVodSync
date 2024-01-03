@@ -98,10 +98,12 @@ function App() {
       }
       />
 
-      <div className='players-grid'>
+      <div className={vods.length == 4 ? 'players-grid-2' : 'players-grid'}>
         {
           vods.map((v, i) => {
-            return <div className='grid-item' key={i} style={{
+            return <div className={
+              vods.length === 4 ? 'grid-item-2' : 'grid-item'
+            } key={i} style={{
               display: hideList[v] ? 'none' : 'block'
             }}>
               <div className='controls'>
